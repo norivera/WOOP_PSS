@@ -1,4 +1,4 @@
-from xml.dom.expatbuilder import parseString
+from unicodedata import name
 from WOOP_PSS.schedule import Schedule
 # Task Class will inherit from schedule
 class Task(Schedule):
@@ -20,3 +20,26 @@ class Task(Schedule):
         so, the transient task is not overlapping 
         '''
         pass
+
+    #### SETTER AND GETTER METHODS ####
+    def getName(self):
+        return self.name
+    def getType(self):
+        return self.type
+    def getStartTime(self):
+        return self.startTime
+    def getDuration(self):
+        return self.duration
+    def getDate(self):
+        return self.date
+    
+    def setName(self, name):
+        self.name = name
+    def setType(self, type):
+        self.type = type
+    def setStartTime(self, startTime):
+        self.startTime = startTime
+    def setDuration(self, duration):
+        self.duration = duration
+    def setDate(self, date):
+        self.date = date
