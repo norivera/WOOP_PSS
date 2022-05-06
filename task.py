@@ -1,5 +1,16 @@
-import schedule
+from typing import Type
+from unicodedata import name
+from WOOP_PSS.schedule import Schedule
 # Task Class will inherit from schedule
 class Task(Schedule):
-    def __init__(self):
-        pass
+    # when a task object is created, pass in values for the attributes
+    def __init__(self, name, type, startTime, duration, date):
+        self.name = name
+        self.type = type
+        self.startTime = startTime
+        self.duration = duration
+        self.date = date
+    
+    
+
+    
