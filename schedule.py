@@ -1,8 +1,8 @@
-import task
-class Schedule:
-    taskList #List of task object
+from task import task
+class schedule:
+    taskList = []
     def __init__(self):
-        pass
+        pass 
     def checkName(name):
         '''
         ensure that each task has a unique name for searching purposes
@@ -10,7 +10,7 @@ class Schedule:
         return true if name does not exist, false if it does
         '''
         pass
-    def createTask(name, type, sTime, duration, date):
+    def createTask(self, name, type, sTime, duration, date):
         '''
         date = YYYYMMDD
         sTime, duration = 24HR (increments of .25, rounded to the nearest 15 mins)
@@ -22,11 +22,13 @@ class Schedule:
             -anti task:
                 "cancellation"
         '''
-        if(name not in [x for x.name in taskList]):
-            newTask = Task(name, type, sTime,duration,date)
-            taskList.append(newTask)
-        else:
-            return "task creation failed"
+        newTask = task(name, type, sTime,duration,date)
+        taskList.append(newTask)
+        # if(name not in [x for x.name in taskList]):
+        #     newTask = Task(name, type, sTime,duration,date)
+        #     taskList.append(newTask)
+        # else:
+        #     return "task creation failed"
 
     def viewTask(name):
         pass
@@ -40,7 +42,13 @@ class Schedule:
         '''
         printing the schedule for a specified day, week, or month
         '''
-        print(taskList)
+        sortedList= taskList.sort(key=lambda x: str(x.date)[4:])
+        
+        for x in taskList:
+            print(x.name)
+
+        for x in sortedList:
+            print(x.name)
 
     def writeSchedule(fileName, period, startDate):
         '''

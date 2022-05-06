@@ -1,5 +1,5 @@
 
-class Task():
+class task:
     # when a task object is created, pass in values for the attributes
     def __init__(self, name, type, startTime, duration, date):
         '''
@@ -11,6 +11,7 @@ class Task():
         self.startTime = startTime
         self.duration = duration
         self.date = date
+
     #passing in the taskList from parent or directly accessing in method??
     def taskOverlap(taskList, task):
         '''
