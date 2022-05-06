@@ -1,5 +1,3 @@
-from typing import Type
-from unicodedata import name
 from WOOP_PSS.schedule import Schedule
 # Task Class will inherit from schedule
 class Task(Schedule):
@@ -10,7 +8,3 @@ class Task(Schedule):
         self.startTime = startTime
         self.duration = duration
         self.date = date
-    
-    
-
-    
