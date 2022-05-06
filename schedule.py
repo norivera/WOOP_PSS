@@ -6,7 +6,7 @@ class Schedule:
         pass
     def viewTask():
         pass
-    def deleteTask():
+    def editTask():
         pass
     def writeScheduleToFile():
         pass

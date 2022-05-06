@@ -8,3 +8,5 @@ class Task(Schedule):
         self.startTime = startTime
         self.duration = duration
         self.date = date
+    def taskOverlap():
+        pass
