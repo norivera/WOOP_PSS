@@ -11,8 +11,20 @@ class Schedule:
         '''
         pass
     def createTask(name, type, sTime, duration, date):
-        if(checkName(name)):
+        '''
+        date = YYYYMMDD
+        sTime, duration = 24HR (increments of .25, rounded to the nearest 15 mins)
+        types:
+            -Recurring Task:
+                "Class" "Study" "Sleep" "Exercise" "Work" "Meal"
+            -transitent task:
+                "visit" "shopping" "appointment"
+            -anti task:
+                "cancellation"
+        '''
+        if(name not in [x for x.name in taskList]):
             newTask = Task(name, type, sTime,duration,date)
+            taskList.append(newTask)
         else:
             return "task creation failed"
 
@@ -26,9 +38,10 @@ class Schedule:
         pass
     def viewSchedule(period, startDate):
         '''
-        printing the schedul efor a specified day, week, or month
+        printing the schedule for a specified day, week, or month
         '''
-        pass
+        print(taskList)
+
     def writeSchedule(fileName, period, startDate):
         '''
         updating the schedule for a specified day, week, or month
