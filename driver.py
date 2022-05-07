@@ -30,10 +30,9 @@ def main() :
                 "cancellation"
     '''
                                                 #10.25 = 10:15 AM  15 mins     YYYYMMDD 
-    #user1.createTask("SCHOOL Teim T^T", "Class",    10.25,          0.25,      20220506)
-    user1.readScheduleFromFile("./data/schedule.txt") 
+    user1.createTask("SCHOOL Teim T^T", "Class",    10.25,          0.25,      20220506)
     user1.viewSchedule(1234, "skdf") 
-    user1.viewTask("SCHOOL Teim T^T")
+
     
 if __name__ == '__main__':
     main()

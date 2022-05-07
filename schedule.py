@@ -1,3 +1,4 @@
+from asyncio import create_task
 from task import task
 import json
 import collections
@@ -9,13 +10,13 @@ class schedule:
     def __init__(self):
         global taskList
         pass 
-    def checkName(name):
-        '''
-        ensure that each task has a unique name for searching purposes
-        loop thru all the task names to find a match
-        return true if name does not exist, false if it does
-        '''
-        pass
+    #def checkName(name):
+    #    '''
+    #    ensure that each task has a unique name for searching purposes
+    #    loop thru all the task names to find a match
+    #    return true if name does not exist, false if it does
+    #    '''
+    #    pass
     def createTask(self, name, type, sTime, duration, date):
         global taskList
 
@@ -43,8 +44,13 @@ class schedule:
                 if x.name==name:
                     print(x.name, x.type, x.startTime, x.duration, x.date)
 
-    def editTask(name, type, sTime, duration, date):
-        pass
+    def deleteTask(self,name):
+        global taskList
+        taskList = list( filter(lambda x: x.name != name, taskList) ) 
+
+    def editTask(self, name, type, sTime, duration, date):
+        taskList = list( filter(lambda x: x.name != name, taskList))
+        self.createTask(name,type,sTime,duration,date)
 
     def writeScheduleToFile(self):
         with open("./data/schedule.txt", "w") as file:
@@ -65,6 +71,15 @@ class schedule:
         '''
         printing the schedule for a specified day, week, or month
         '''
+        
+        # need to handle overflow of days for month and year or figure our a better format
+        endDate=startDate
+        if period=="day":
+            endDate+=1
+        elif period=="week":
+            endDate+=7
+
+        # sorts the list based on date, need to add functionality also for time
         taskList.sort(key=lambda x: (str(x.date)[4:]), reverse=True)
         
         if taskList:    
