@@ -1,7 +1,10 @@
 from task import task
+
+taskList = []
 class schedule:
-    taskList = []
+    
     def __init__(self):
+        global taskList
         pass 
     def checkName(name):
         '''
@@ -11,6 +14,8 @@ class schedule:
         '''
         pass
     def createTask(self, name, type, sTime, duration, date):
+        global taskList
+
         '''
         date = YYYYMMDD
         sTime, duration = 24HR (increments of .25, rounded to the nearest 15 mins)
@@ -38,17 +43,17 @@ class schedule:
         pass
     def readScheduleToFile(filename):
         pass
-    def viewSchedule(period, startDate):
+    def viewSchedule(self, period, startDate):
         '''
         printing the schedule for a specified day, week, or month
         '''
-        sortedList= taskList.sort(key=lambda x: str(x.date)[4:])
+        taskList.sort(key=lambda x: (str(x.date)[4:]), reverse=True)
         
-        for x in taskList:
-            print(x.name)
+        if taskList:    
+            for x in taskList:
+                print(x.name, x.startTime)
 
-        for x in sortedList:
-            print(x.name)
+
 
     def writeSchedule(fileName, period, startDate):
         '''
