@@ -51,15 +51,15 @@ class schedule:
             json.dump([ob.__dict__ for ob in taskList], file)
 
     def readScheduleFromFile(self,filename):
-        data= json.loads(open(filename, "r").read())
+        with open(filename) as file:
+            data=json.load(file)
 
-        taskList=[]
         print(data)
+        taskList=[]
+
         for x in data: 
-            t = json.loads(data, object_hook=lambda d: SimpleNamespace(**d))
-            
-            taskList.append(t)
-        #print(taskList)
+            self.createTask(x["name"],x["type"], x["startTime"],x["duration"],x["date"])
+
 
     def viewSchedule(self, period, startDate):
         '''
