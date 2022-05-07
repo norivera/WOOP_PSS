@@ -1,4 +1,7 @@
 from task import task
+import json
+import collections
+from types import SimpleNamespace
 
 taskList = []
 class schedule:
@@ -35,14 +38,29 @@ class schedule:
         # else:
         #     return "task creation failed"
 
-    def viewTask(name):
-        pass
+    def viewTask(self, name):
+        for x in taskList:
+                if x.name==name:
+                    print(x.name, x.type, x.startTime, x.duration, x.date)
+
     def editTask(name, type, sTime, duration, date):
         pass
-    def writeScheduleToFile():
-        pass
-    def readScheduleToFile(filename):
-        pass
+
+    def writeScheduleToFile(self):
+        with open("./data/schedule.txt", "w") as file:
+            json.dump([ob.__dict__ for ob in taskList], file)
+
+    def readScheduleFromFile(self,filename):
+        data= json.loads(open(filename, "r").read())
+
+        taskList=[]
+        print(data)
+        for x in data: 
+            t = json.loads(data, object_hook=lambda d: SimpleNamespace(**d))
+            
+            taskList.append(t)
+        #print(taskList)
+
     def viewSchedule(self, period, startDate):
         '''
         printing the schedule for a specified day, week, or month

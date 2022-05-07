@@ -1,0 +1,1 @@
+[{"name": "SCHOOL Teim T^T", "type": "Class", "startTime": 10.25, "duration": 0.25, "date": 20220506}]
