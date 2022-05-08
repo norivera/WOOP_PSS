@@ -30,11 +30,11 @@ class schedule:
         transitentT = ["Visit", "Shopping", "Appointment", "Fishing"]
         antiT = ["Cancellation"]
         #INPUT CHECKING
-        if(not checkName(name)):
+        if(not self.checkName(name)):
             print("Not a unique task name, please try again")
             return False
 
-        if (type not in recurringT) or (type not in transitentT) or (type not in antiT):
+        if (type not in recurringT) and (type not in transitentT) and (type not in antiT):
             print("Invalid task type, please try again")
             return False
         if  not (0.25 <= duration <= 23.75):
@@ -48,7 +48,6 @@ class schedule:
 
         try:
             datetime.strptime(str(date), "%Y%m%d")
-            print("This is the correct date string format.")
         except ValueError:
             print("This is the incorrect date string format. It should be YYYYMMDD")
             return False
@@ -57,17 +56,17 @@ class schedule:
         newTask = task(name, type, sTime,duration,date)
         taskList.append(newTask)
 
-    def checkName(name):
+    def checkName(self, name):
         '''
         ensure that each task has a unique name for searching purposes
         loop thru all the task names to find a match
         return true if name does not exist, false if it does
         '''
-        if name not in [x for x.name in taskList]:
+        if name not in [x.name for x in taskList]:
             return True
         else:
             return False
-            
+
     def viewTask(self, name):
         global taskList
         for x in taskList:
@@ -84,8 +83,11 @@ class schedule:
         self.createTask(name,type,sTime,duration,date)
 
     def writeScheduleToFile(self):
+        taskList.sort(key=lambda x: (x.date,x.startTime))
+
         with open("./data/schedule.txt", "w") as file:
             json.dump([ob.__dict__ for ob in taskList], file)
+            
 
     def readScheduleFromFile(self,filename):
         with open(filename) as file:
@@ -114,6 +116,7 @@ class schedule:
 
         # sorts the list based on date, need to add functionality also for time
         
+        taskList.sort(key=lambda x: (x.date,x.startTime))
         if taskList:    
             for x in taskList:
                 if str(startDate) <= str(x.date) <= endDate:
@@ -136,5 +139,6 @@ class schedule:
         # sorts the list based on date, need to add functionality also for time
         subList = list( filter(lambda x: str(startDate) <= str(x.date) <= endDate, taskList))
     
+        subList.sort(key=lambda x: (x.date,x.startTime))
         with open(fileName, "w") as file:
             json.dump([ob.__dict__ for ob in subList], file)

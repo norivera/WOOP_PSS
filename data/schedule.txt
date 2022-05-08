@@ -1,1 +1,1 @@
-[{"name": "SCHOOL Teim T^T", "type": "Class", "startTime": 10.25, "duration": 0.25, "date": 20220506}]
+[{"name": "1", "type": "Class", "startTime": 10.25, "duration": 10.25, "date": 20220506}, {"name": "2", "type": "Class", "startTime": 8.25, "duration": 8.25, "date": 20220510}, {"name": "3", "type": "Class", "startTime": 9.25, "duration": 9.25, "date": 20220601}]
