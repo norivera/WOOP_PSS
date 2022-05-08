@@ -1,5 +1,10 @@
 #from module  import  class
 from schedule import schedule
+import os
+import sys
+#run in command prompt: pip install console-menu
+from consolemenu import *
+from consolemenu.items import *
 # import recurringTask
 # import transientTask
 
@@ -74,15 +79,45 @@ def main() :
     creating requires:
         - self, name, type, startTime, duration, 
     '''
+    # ### MAIN MENU ###
+    # userInput = input(mainMenu())
+    # if userInput == 1:
+    #     userInput = input(subMenu())
+    #     if userInput == 1:
+    #         userInput = input(editMenu())
+    #     elif userInput == 2:
+    #         userInput = input(viewMenu())
+    #     elif userInput == 3:
+    #         userInput = input(exportMenu())
+    #     else:
+    #         userInput == input(mainMenu())
+    # elif userInput == 2:
+    #     filename = input("Please enter the complete filepath to file: ")
+    #     readScheduleFromFile(filename)
+    #     userInput = input(subMenu())
+            
+    # elif userInput == 3:
+    #     sys.exit("Thank you for using the PSS :)")
+    
+    # loop = True
+    # while loop:
+    #     userInput = input(mainMenu())
+    #     if userInput == 1:
+    #         userInput == input(subMenu())
+    #     elif userInput == 2:
+    #         filename = input("Please enter the complete filepath to file: ")
+    #         readScheduleFromFile(filename)
+    #         userInput = input(subMenu())
+    #     elif userInput == 3:
+    #         sys.exit("Thank you for using the PSS :)")
 
-    '''
-    userInput = input(mainMenu())
-    if user == 1:
-         subMenu()
-    elif user == 2:
-        filename = input("Please enter the complete filepath to file: ")
-        readScheduleFromFile(filename)
-    '''
+
+
+    mainMenu = ConsoleMenu("Title", "Subtitle")
+
+        
+    
+
                                                
     user.createTask("1", "Class",    10.25,          0.25,      20220506)
     user.createTask("2", "Class",    8.25,          0.25,      20220510)
