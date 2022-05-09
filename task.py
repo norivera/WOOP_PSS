@@ -42,3 +42,6 @@ class task:
         self.duration = duration
     def setDate(self, date):
         self.date = date
+    def taskOverlap():
+        pass
+
