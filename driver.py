@@ -78,7 +78,9 @@ def main() :
         - self, name, type, startTime, duration, 
     '''
     user = schedule()
-
+###################################################################
+# Menus run with hardcoded data, need to add code for user input. #
+###################################################################
     while True:
         ########## START MAIN MENU ##########
         mainMenu()
