@@ -3,8 +3,7 @@ from schedule import schedule
 import os
 import sys
 #run in command prompt: pip install console-menu
-from consolemenu import *
-from consolemenu.items import *
+import consolemenu
 # sample code for the menu: https://pypi.org/project/console-menu/ 
 # import recurringTask
 # import transientTask
@@ -114,7 +113,7 @@ def main() :
 
 
 
-    menu = ConsoleMenu("Welcome to PSS")
+    menu = ConsoleMenu("PSS Main menu")
     selection_menu = SelectionMenu(["Edit", "Add", "View", "Delete"])
     submenu_item1 = SubmenuItem("Create schedule", selection_menu, menu)
     submenu_item2 = SubmenuItem("Import schedule", selection_menu, menu)
@@ -122,18 +121,13 @@ def main() :
     menu.append_item(submenu_item2)
     menu.show()
 
-    # menu_item2 = MenuItem("Export Schedule")
-
-    #submenu_item = SubmenuItem("Edit Schedule Menu", selection_menu, mainMenu) 
-
-
                                                
     # user.createTask("1", "Class",    10.25,          0.25,      20220506)
     # user.createTask("2", "Class",    8.25,          0.25,      20220510)
     # user.createTask("3", "Class",    9.25,          0.25,      20220601)
 
     #user.viewSchedule("month",20220506) 
-    # user.writeScheduleToFile()
+    #user.writeScheduleToFile()
 
 if __name__ == '__main__':
     main()
