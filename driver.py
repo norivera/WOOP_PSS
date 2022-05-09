@@ -15,7 +15,7 @@ def mainMenu():
     welcome, import or create from scratch
     '''
     print(" ______________________________________")
-    print("|           Welcome to PSS             |")
+    print("|          Welcome to PSS              |")
     print("| Please make a selection:             |")
     print("|    1. Create schedule                |")
     print("|    2. Import schedule                |")
@@ -27,7 +27,7 @@ def subMenu():
     edit, export, view schedule, or return to main menu
     '''
     print(" ______________________________________")
-    print("|                                      |")
+    print("|           SubMenu                    |")
     print("| Please make a selection:             |")
     print("|    1. Edit Schedule                  |")
     print("|    2. View Schedule                  |")
@@ -37,7 +37,7 @@ def subMenu():
 
 def editMenu():
     print(" ______________________________________")
-    print("|            Edit Schedule             |")
+    print("|           EditMenu                   |")
     print("| Please make a selection:             |")
     print("|    1. Edit Task                      |")
     print("|    2. Add Task                       |")
@@ -50,7 +50,7 @@ def viewMenu():
     tasks for day, week, month
     '''
     print(" ______________________________________")
-    print("|                                      |")
+    print("|           ViewMenu                   |")
     print("| Please make a selection:             |")
     print("|    1. View By Day                    |")
     print("|    2. View By Week                   |")
@@ -63,7 +63,7 @@ def viewMenu():
 #     tasks for day, week, month
 #     '''
 #     print(" ______________________________________")
-#     print("|                                      |")
+#     print("|          WriteMenu                   |")
 #     print("| Please make a selection:             |")
 #     print("|    1. Write By Day                   |")
 #     print("|    2. Write By Week                  |")
@@ -80,6 +80,7 @@ def main() :
     user = schedule()
 
     while True:
+        ########## START MAIN MENU ##########
         mainMenu()
         userInput = input(">> ")
         if userInput == "1":
@@ -89,11 +90,13 @@ def main() :
             print("...Task created")
             subMenuLoop = True
             while subMenuLoop:
+                ########## START SUB MENU ##########
                 subMenu()
                 userInput = input(">> ")
                 if userInput == "1":
                     editMenuLoop = True
                     while editMenuLoop:
+                        ########## START EDIT MENU ##########
                         editMenu()
                         userInput = input(">> ")
                         if userInput == "1":
@@ -110,9 +113,13 @@ def main() :
                             print("Task deleted")
                         elif userInput == "4":
                             editMenuLoop = False
+                        else:
+                            print("Invalid option, please try again :)")
+                        ########## END EDIT MENU ##########
                 elif userInput == "2":
                     viewMenuLoop = True
                     while viewMenuLoop:
+                        ########## START VIEW MENU ##########
                         viewMenu()
                         userInput = input(">> ")
                         if userInput == "1":
@@ -126,11 +133,17 @@ def main() :
                             user.viewSchedule("month", 20220506)
                         elif userInput == "4":
                             viewMenuLoop = False
+                        else:
+                            print("Invalid option, please try again :)")
+                        ########## END VIEW MENU ##########
                 elif userInput == "3":
                     user.writeScheduleToFile
                     print("Schedule exported")
                 elif userInput == "4":
                     subMenuLoop = False
+                else:
+                    print("Invalid option, please try again :)")
+                ########## END SUB MENU ##########
         elif userInput == "2":
             filename = input("Please enter the complete filepath to file: ")
             user.readScheduleFromFile(filename)
@@ -139,6 +152,7 @@ def main() :
             sys.exit("Thank you for using the PSS. WOOP WOOP :)")
         else:
             print("Invalid option, please try again :)")
+        ########## END MAIN MENU ##########
 
 
 
