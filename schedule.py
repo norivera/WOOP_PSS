@@ -47,6 +47,10 @@ class schedule:
         else: 
             duration= round(sTime*4)/4
 
+
+        
+        #check for overlapping tasks, iterate over tasks check date and times, if anti task, this is ok
+
         try:
             datetime.strptime(str(date), "%Y%m%d")
         except ValueError:
@@ -56,6 +60,7 @@ class schedule:
             
         newTask = task(name, type, sTime,duration,date)
         taskList.append(newTask)
+        return True
 
     def checkName(self, name):
         '''
@@ -119,6 +124,13 @@ class schedule:
         
         taskList.sort(key=lambda x: (x.date,x.startTime))
         if taskList:    
+            for x in taskList:
+                if str(startDate) <= str(x.date) <= endDate:
+                    print(x.name, x.startTime)
+    
+    def viewEntireSchedule(self):
+        taskList.sort(key=lambda x: (x.date,x.startTime))
+        if taskList:
             for x in taskList:
                 if str(startDate) <= str(x.date) <= endDate:
                     print(x.name, x.startTime)

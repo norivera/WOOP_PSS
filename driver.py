@@ -55,21 +55,36 @@ def viewMenu():
     print("|    1. View By Day                    |")
     print("|    2. View By Week                   |")
     print("|    3. View By Month                  |")
-    print("|    4. Back                           |")
+    print("|    4. View Entire Schedule           |")
+    print("|    5. Back                           |")
     print("|______________________________________|")
 
-# def writeMenu():
-#     '''
-#     tasks for day, week, month
-#     '''
-#     print(" ______________________________________")
-#     print("|                                      |")
-#     print("| Please make a selection:             |")
-#     print("|    1. Write By Day                   |")
-#     print("|    2. Write By Week                  |")
-#     print("|    3. Write By Month                 |")
-#     print("|    4. Back                           |")
-#     print("|______________________________________|")
+def writeMenu():
+    '''
+    tasks for day, week, month
+    '''
+    print(" ______________________________________")
+    print("|                                      |")
+    print("| Please make a selection:             |")
+    print("|    1. Write By Day                   |")
+    print("|    2. Write By Week                  |")
+    print("|    3. Write By Month                 |")
+    print("|    4. Write Entire Schedule          |")
+    print("|    5. Back                           |")
+    print("|______________________________________|")
+
+def taskInfoPrompt():
+    name = input("Please enter the name of the task: ")
+    tType = input(\
+    "There are 3 types of tasks:\n \
+        - Recurring: Class, Study, Sleep, Exercise, Work, Meal\n \
+        - Transient: Visit, Shopping, Appointment\n \
+        - Anti-Task: Cancellation\nPlease enter the type of task: ")
+    startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
+    duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
+    date = input("Please enter the date in the form YYYYMMDD: ")
+    return name, tType, float(startTime), float(duration), date;
+
 
 def main() :
     #driver code here :)
@@ -84,10 +99,18 @@ def main() :
         userInput = input(">> ")
         if userInput == "1":
             print("New schedule created. Add a task!")
-            #dummy hardcoded data for creating a task
-            user.createTask("Glowing to school", "Class", 10.25,   0.25,   20220506)
-            print("...Task created")
-            subMenuLoop = True
+            try:
+            #runs if no error, trying to account for bad num inputs, since casting in infoPrompt function
+                args = taskInfoPrompt()
+                if user.createTask(*args): # the '*' means the elements in args will be the arguments of createTask func
+                    print("...Task created")
+                    subMenuLoop = True
+                else:
+                    print("Bad input, please try again")
+                    continue
+            except:
+                print("Bad input, please try again")
+                continue
             while subMenuLoop:
                 subMenu()
                 userInput = input(">> ")
@@ -97,16 +120,16 @@ def main() :
                         editMenu()
                         userInput = input(">> ")
                         if userInput == "1":
-                            #dummy hardcoded data for editing a task
-                            user.editTask("Doing homework", "Study",     8.25,   0.75,   20220510)
+                            args = taskInfoPrompt()
+                            user.createTask(*list(args)) # passing the elements of the tuple as a list of args 
                             print("Task updated")
                         elif userInput == "2":
-                            #dummy hardcoded data for adding a task
-                            user.createTask("Buying clothes", "Shopping",  9.25,   0.50,   20220520)
+                            args = taskInfoPrompt()
+                            user.createTask(*args)
                             print("...Task created")
                         elif userInput == "3":
-                            #dummy hardcoded data for deleting a task
-                            user.deleteTask("Doing homework")
+                            taskName = input("Please enter the name of the task (case sensitive): ")
+                            user.deleteTask(taskName)
                             print("Task deleted")
                         elif userInput == "4":
                             editMenuLoop = False
@@ -117,17 +140,22 @@ def main() :
                         userInput = input(">> ")
                         if userInput == "1":
                             print("Schedule by day:")
-                            user.viewSchedule("day", 20220506)
+                            date = input("Please enter the date in form YYYYMMDD: ")
+                            user.viewSchedule("day", date)
                         elif userInput == "2":
                             print("Schedule by week:")
-                            user.viewSchedule("week", 20220506)
+                            date = input("Please enter the date in form YYYYMMDD: ")
+                            user.viewSchedule("week", date)
                         elif userInput == "3":
                             print("Schedule by month:")
-                            user.viewSchedule("month", 20220506)
+                            date = input("Please enter the date in form YYYYMMDD: ")
+                            user.viewSchedule("month", date)
                         elif userInput == "4":
+                            print("Viewing entire Schedule")
+                        elif userInput == "5":
                             viewMenuLoop = False
                 elif userInput == "3":
-                    user.writeScheduleToFile
+                    user.writeScheduleToFile()
                     print("Schedule exported")
                 elif userInput == "4":
                     subMenuLoop = False

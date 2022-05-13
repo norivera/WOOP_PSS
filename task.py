@@ -12,13 +12,6 @@ class task:
         self.duration = duration
         self.date = date
 
-    #passing in the taskList from parent or directly accessing in method??
-    def taskOverlap(taskList, task):
-        '''
-        When creating transient tasks, if recurring, check if there is an anti-task to cancel it; if
-        so, the transient task is not overlapping 
-        '''
-        pass
 
     #### SETTER AND GETTER METHODS ####
     def getName(self):
