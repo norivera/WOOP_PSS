@@ -3,8 +3,8 @@ from schedule import schedule
 import os
 import sys
 #run in command prompt: pip install console-menu
-from consolemenu import *
-from consolemenu.items import *
+# from consolemenu import *
+# from consolemenu.items import *
 # sample code for the menu: https://pypi.org/project/console-menu/ 
 # import recurringTask
 # import transientTask
