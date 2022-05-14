@@ -9,16 +9,17 @@ from types import SimpleNamespace
 from datetime import datetime, timedelta, time
 
 taskList = []
+recurringDates=[]
 class schedule:
 
     def __init__(self):
-        global taskList
+        global taskList, recurringDates
         pass 
 
-    def createRecurringTask(self, name, type, sTime, duration, date, sDate, eDate, frequency):
-        global taskList
+    def createRecurringTask(self, name, type, sTime, duration, sDate, eDate, frequency):
+        global taskList, recurringDates
 
-        if  not self.checkInputs(self, name, type, sTime, duration, date):
+        if  not self.checkInputs(name, type, sTime, duration, 20220516):
             return False
 
         recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
@@ -36,16 +37,24 @@ class schedule:
             return False
 
         
-        if 1<= frequency <= (end-start).days:
+        if not 1<= frequency <= (end-start).days:
             print("Frequency is not between start and end dates, please try again")
+	    return False
 
-        newTask = recurringTask(name, type, sTime,duration,date,sDate,eDate,frequency)
+        newTask = recurringTask(name, type, sTime,duration,sDate,eDate,frequency)
         taskList.append(newTask)
+        
+        day = start
+        while day<= end:
+            recurringDates.append((day,sTime,duration))
+            day = start+ timedelta(days=frequency)
+
+        return True    
 
     def createAntiTask(self, name, type, sTime, duration, date):
-        global taskList
+        global taskList, recurringDates
 
-        if  not self.checkInputs(self, name, type, sTime, duration, date):
+        if not self.checkInputs(name, type, sTime, duration, date):
             return False
         antiT = ["cancellation"]
         if type.lower() not in antiT:
@@ -54,14 +63,22 @@ class schedule:
         duration= round(duration*4)/4
         sTime= round(sTime*4)/4
 
+
+        if (date, sTime, duration) not in recurringDates:
+            print("No recurring task during this date and time, please try again")
+            return False
+        else:
+            recurringDates.remove((date, sTime, duration))
+            
         newTask = antiTask(name, type, sTime,duration,date)
         taskList.append(newTask)
 
-    def createTransientTask(self, name, type, sTime, duration, date):
-        global taskList
+        return True
 
-        
-        if  not self.checkInputs(self, name, type, sTime, duration, date):
+    def createTransientTask(self, name, type, sTime, duration, date):
+        global taskList, recurringDates
+
+        if not self.checkInputs(name, type, sTime, duration, date):
             return False
         transientT = ["visit", "shopping", "appointment"]
         if type.lower() not in transientT:
@@ -70,8 +87,14 @@ class schedule:
         duration= round(duration*4)/4
         sTime= round(sTime*4)/4
 
-        newTask = antiTask(name, type, sTime,duration,date)
+        if (date, sTime, duration) in recurringDates:
+            print("Overlaps with an existing recurring task, please try again")
+            return False
+
+        newTask = transientTask(name, type, sTime,duration,date)
         taskList.append(newTask)
+
+        return True
 
     
     def checkInputs(self, name, type, sTime, duration, date):

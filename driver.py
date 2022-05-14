@@ -1,4 +1,5 @@
 #from module  import  class
+from asyncio.windows_events import NULL
 from schedule import schedule
 import os
 import sys
@@ -6,6 +7,9 @@ import sys
 # sample code for the menu: https://pypi.org/project/console-menu/ 
 # import recurringTask
 # import transientTask
+
+recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
+transientT = ["visit", "shopping", "appointment"]
 
 
 def mainMenu():
@@ -90,48 +94,73 @@ def taskInfoPrompt():
         #     - Anti-Task: Cancellation\nPlease enter the type of task: ")
         if tType == "1":    # recurring task
             name = input("Please enter the name of the task (case sensitive): ")
+            tType = input("Select a recurring task type:\n Class, Study, Sleep, Exercise, Work, Meal\n")
             startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
             duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
-            # Don't think date may be required in the "createRecurringTask" method since we are asking for start and end date
-            date = input("Please enter the date in the form YYYYMMDD: ")
             startDate = input("Please enter the start date in the form YYYYMMDD: ")
             endDate = input("Please enter the end date in the form YYYYMMDD: ")
             frequency = input("Please enter the frequency number: ")
-            return name, tType, float(startTime), float(duration), date, startDate, endDate, frequency
+            taskInfoMenuLoop = False
+            return name, tType, float(startTime), float(duration), startDate, endDate, int(frequency)
         elif tType == "2": # transient task
             name = input("Please enter the name of the task (case sensitive): ")
+            tType = input("Select a transient task type:\nVisit, Shopping, Appointment\n ")
             startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
             duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
             date = input("Please enter the date in the form YYYYMMDD: ")
+            taskInfoMenuLoop = False
             return name, tType, float(startTime), float(duration), date
         elif tType == "3": # anti-task
-            print("DO WOOPness for anti-task")
+            name = input("Please enter the name of the task (case sensitive): ")
+            tType = "Cancellation"
+            startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
+            duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
+            date = input("Please enter the date in the form YYYYMMDD: ")
+            taskInfoMenuLoop = False
+            return name, tType, float(startTime), float(duration), date
         elif tType == "4":
             taskInfoMenuLoop = False
 
 def main() :
-    #driver code here :)
+    global recurringT, transientT
+    
+    #driver code here :) ^_^ :D '.' :3 :o :E 
     '''
     creating requires:
         - self, name, type, startTime, duration, 
     '''
     user = schedule()
-
     while True:
         mainMenu()
         userInput = input(">> ")
         if userInput == "1":
-            args = taskInfoPrompt()
+            args = list(taskInfoPrompt())
             try:
             #runs if no error, trying to account for bad num inputs, since casting in infoPrompt function
-                args = taskInfoPrompt()
-                if user.createTask(*args): # the '*' means the elements in args will be the arguments of createTask func
-                    print("...Task created")
-                    subMenuLoop = True
-                # else:
-                #     print("Bad input, please try again")
-                #     continue
-            except:
+                args[1] = args[1].lower()
+                if args[1] in recurringT:# recurring task # the '*' means the elements in args will be the arguments of createTask func
+                    if user.createRecurringTask(*args):
+                        subMenuLoop = True
+                        print("...Task created")
+                    else:
+                        print("problem creating task")
+                elif args[1] in transientT: #transient task
+                    if user.createTransientTask(*args):
+                        subMenuLoop = True
+                        print("...Task created")
+                    else:
+                        print("problem creating task")
+                elif args[1] == "cancellation": #anti task
+                    if user.createAntiTask(*args):
+                        subMenuLoop = True
+                        print("...Task created")
+                    else:
+                        print("problem creating task")
+                else:
+                    print("Bad input, please try again againgain")
+                    continue
+            except Exception as e: 
+                print(repr(e)) #should take care of errors that a thrown when casting bad strings from taskInfoPrompt method
                 print("Bad input, please try again")
                 continue
             while subMenuLoop:
