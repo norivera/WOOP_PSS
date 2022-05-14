@@ -3,8 +3,6 @@ from schedule import schedule
 import os
 import sys
 #run in command prompt: pip install console-menu
-# from consolemenu import *
-# from consolemenu.items import *
 # sample code for the menu: https://pypi.org/project/console-menu/ 
 # import recurringTask
 # import transientTask
@@ -74,7 +72,16 @@ def writeMenu():
     print("|______________________________________|")
 
 def taskInfoPrompt():
-    name = input("Please enter the name of the task: ")
+    print(" ______________________________________")
+    print("|                                      |")
+    print("| Select a task type:                  |")
+    print("|    1. Recurring                      |")
+    print("|    2. Transient                      |")
+    print("|    3. Anti-Task                      |")
+    print("|    4. Back                           |")
+    print("|______________________________________|")
+    name = input(">> ")
+
     tType = input(\
     "There are 3 types of tasks:\n \
         - Recurring: Class, Study, Sleep, Exercise, Work, Meal\n \
@@ -98,7 +105,6 @@ def main() :
         mainMenu()
         userInput = input(">> ")
         if userInput == "1":
-            print("New schedule created. Add a task!")
             try:
             #runs if no error, trying to account for bad num inputs, since casting in infoPrompt function
                 args = taskInfoPrompt()
@@ -114,26 +120,26 @@ def main() :
             while subMenuLoop:
                 subMenu()
                 userInput = input(">> ")
-                if userInput == "1":
+                if userInput == "1":    # edit schedule
                     editMenuLoop = True
                     while editMenuLoop:
                         editMenu()
                         userInput = input(">> ")
-                        if userInput == "1":
+                        if userInput == "1":    # edit task
                             args = taskInfoPrompt()
                             user.createTask(*list(args)) # passing the elements of the tuple as a list of args 
                             print("Task updated")
-                        elif userInput == "2":
+                        elif userInput == "2":  # add task
                             args = taskInfoPrompt()
                             user.createTask(*args)
                             print("...Task created")
-                        elif userInput == "3":
+                        elif userInput == "3":  # delete task
                             taskName = input("Please enter the name of the task (case sensitive): ")
                             user.deleteTask(taskName)
                             print("Task deleted")
-                        elif userInput == "4":
+                        elif userInput == "4":  # back
                             editMenuLoop = False
-                elif userInput == "2":
+                elif userInput == "2":  # view schedule
                     viewMenuLoop = True
                     while viewMenuLoop:
                         viewMenu()
@@ -151,15 +157,16 @@ def main() :
                             date = input("Please enter the date in form YYYYMMDD: ")
                             user.viewSchedule("month", date)
                         elif userInput == "4":
-                            print("Viewing entire Schedule")
+                            print("Viewing entire Schedule:")
+                            user.viewEntireSchedule()
                         elif userInput == "5":
                             viewMenuLoop = False
-                elif userInput == "3":
+                elif userInput == "3":  # export schedule
                     user.writeScheduleToFile()
-                    print("Schedule exported")
+                    print("Schedule exported to '/data/schedule.txt'")
                 elif userInput == "4":
                     subMenuLoop = False
-        elif userInput == "2":
+        elif userInput == "2":  # import schedule
             filename = input("Please enter the complete filepath to file: ")
             user.readScheduleFromFile(filename)
             print("File imported!")
@@ -169,23 +176,10 @@ def main() :
             print("Invalid option, please try again :)")
 
 
-
-    # menu = ConsoleMenu("Welcome to PSS")
-    # selection_menu = SelectionMenu(["Edit", "Add", "View", "Delete"])
-    # submenu_item1 = SubmenuItem("Create schedule", selection_menu, menu)
-    # submenu_item2 = SubmenuItem("Import schedule", selection_menu, menu)
-    # menu.append_item(submenu_item1)
-    # menu.append_item(submenu_item2)
-    # menu.show()
-    # menu_item2 = MenuItem("Export Schedule")
-    #submenu_item = SubmenuItem("Edit Schedule Menu", selection_menu, mainMenu)
-
-                                               
     # user.createTask("1", "Class",    10.25,          0.25,      20220506)
     # user.createTask("2", "Class",    8.25,          0.25,      20220510)
     # user.createTask("3", "Class",    9.25,          0.25,      20220601)
-
-    #user.viewSchedule("month",20220506) 
+    # user.viewSchedule("month",20220506) 
     # user.writeScheduleToFile()
 
 if __name__ == '__main__':

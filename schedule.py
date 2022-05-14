@@ -1,5 +1,8 @@
 from asyncio import create_task
 from task import task
+from antiTask import antiTask
+from recurringTask import recurringTask
+from transientTask import transientTask
 import json
 import collections
 from types import SimpleNamespace
@@ -9,69 +12,89 @@ taskList = []
 class schedule:
 
     def __init__(self):
-
         global taskList
         pass 
 
-    def createTask(self, name, type, sTime, duration, date):
+    def createRecurringTask(self, name, type, sTime, duration, date, sDate, eDate, frequency):
         global taskList
 
-        '''
-        date = YYYYMMDD
-        sTime, duration = 24HR (increments of .25, rounded to the nearest 15 mins)
-        types:
-            -Recurring Task:
-                "Class" "Study" "Sleep" "Exercise" "Work" "Meal" 
-            -transitent task:
-                "Visit" "Shopping" "Appointment" "Fishing"
-            -anti task:
-                "cancellation"
-        '''
-        recurringT = ["Class", "Study", "Sleep", "Exercise", "Work", "Meal"]
-        transitentT = ["Visit", "Shopping", "Appointment", "Fishing"]
-        antiT = ["Cancellation"]
-        #INPUT CHECKING
-        if(not self.checkName(name)):
+        if  not self.checkInputs(self, name, type, sTime, duration, date):
+            return False
+
+        recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
+        if type.lower() not in recurringT:
+            print("Not a valid task type")
+            return False
+        duration= round(duration*4)/4
+        sTime= round(sTime*4)/4
+
+        try:
+            start =datetime.strptime(str(sDate), "%Y%m%d")
+            end=datetime.strptime(str(eDate), "%Y%m%d")
+        except ValueError: 
+            print("This is the incorrect date string format. It should be YYYYMMDD. please try again")
+            return False
+
+        
+        if 1<= frequency <= (end-start).days:
+            print("Frequency is not between start and end dates, please try again")
+
+        newTask = recurringTask(name, type, sTime,duration,date,sDate,eDate,frequency)
+        taskList.append(newTask)
+
+    def createAntiTask(self, name, type, sTime, duration, date):
+        global taskList
+
+        if  not self.checkInputs(self, name, type, sTime, duration, date):
+            return False
+        antiT = ["cancellation"]
+        if type.lower() not in antiT:
+            print("Not a valid task type")
+            return False
+        duration= round(duration*4)/4
+        sTime= round(sTime*4)/4
+
+        newTask = antiTask(name, type, sTime,duration,date)
+        taskList.append(newTask)
+
+    def createTransientTask(self, name, type, sTime, duration, date):
+        global taskList
+
+        
+        if  not self.checkInputs(self, name, type, sTime, duration, date):
+            return False
+        transientT = ["visit", "shopping", "appointment"]
+        if type.lower() not in transientT:
+            print("Not a valid task type")
+            return False
+        duration= round(duration*4)/4
+        sTime= round(sTime*4)/4
+
+        newTask = antiTask(name, type, sTime,duration,date)
+        taskList.append(newTask)
+
+    
+    def checkInputs(self, name, type, sTime, duration, date):
+        
+        if name in [x.name for x in taskList]:
             print("Not a unique task name, please try again")
             return False
 
-        if (type not in recurringT) and (type not in transitentT) and (type not in antiT):
-            print("Invalid task type, please try again")
-            return False
         if  not (0.25 <= duration <= 23.75):
-            return False
-        else: 
-            duration= round(duration*4)/4
+            print("Duration not between 0.25 and 23.75, please try again")
+            return False 
+
         if  not (0 <= sTime <= 23.75):
             return False
-        else: 
-            duration= round(sTime*4)/4
-
-
-        
-        #check for overlapping tasks, iterate over tasks check date and times, if anti task, this is ok
 
         try:
             datetime.strptime(str(date), "%Y%m%d")
         except ValueError:
             print("This is the incorrect date string format. It should be YYYYMMDD")
             return False
-       
-            
-        newTask = task(name, type, sTime,duration,date)
-        taskList.append(newTask)
+
         return True
 
-    def checkName(self, name):
-        '''
-        ensure that each task has a unique name for searching purposes
-        loop thru all the task names to find a match
-        return true if name does not exist, false if it does
-        '''
-        if name not in [x.name for x in taskList]:
-            return True
-        else:
-            return False
 
     def viewTask(self, name):
         global taskList
@@ -132,8 +155,7 @@ class schedule:
         taskList.sort(key=lambda x: (x.date,x.startTime))
         if taskList:
             for x in taskList:
-                if str(startDate) <= str(x.date) <= endDate:
-                    print(x.name, x.startTime)
+                print(x.name, x.startTime)
 
 
     def writeSchedule(self, fileName, period, startDate):
