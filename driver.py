@@ -2,7 +2,7 @@
 from schedule import schedule
 import os
 import sys
-#run in command prompt: pip install console-menu
+# run in command prompt: pip install console-menu
 # sample code for the menu: https://pypi.org/project/console-menu/ 
 # import recurringTask
 # import transientTask
@@ -10,7 +10,7 @@ import sys
 
 def mainMenu():
     '''
-    welcome, import or create from scratch
+    welcome, import or create from scratch 
     '''
     print(" ______________________________________")
     print("|           Welcome to PSS             |")

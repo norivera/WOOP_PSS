@@ -116,6 +116,7 @@ class schedule:
 
         with open("./data/schedule.txt", "w") as file:
             json.dump([ob.__dict__ for ob in taskList], file)
+        file.close()
             
 
     def readScheduleFromFile(self,filename):
@@ -123,6 +124,7 @@ class schedule:
             data=json.load(file)
 
         print(data)
+        file.close()
         taskList=[]
 
         for x in data: 
@@ -177,3 +179,4 @@ class schedule:
         subList.sort(key=lambda x: (x.date,x.startTime))
         with open(fileName, "w") as file:
             json.dump([ob.__dict__ for ob in subList], file)
+        file.close()
