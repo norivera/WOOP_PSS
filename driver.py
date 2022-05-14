@@ -72,26 +72,42 @@ def writeMenu():
     print("|______________________________________|")
 
 def taskInfoPrompt():
-    print(" ______________________________________")
-    print("|                                      |")
-    print("| Select a task type:                  |")
-    print("|    1. Recurring                      |")
-    print("|    2. Transient                      |")
-    print("|    3. Anti-Task                      |")
-    print("|    4. Back                           |")
-    print("|______________________________________|")
-    name = input(">> ")
-
-    tType = input(\
-    "There are 3 types of tasks:\n \
-        - Recurring: Class, Study, Sleep, Exercise, Work, Meal\n \
-        - Transient: Visit, Shopping, Appointment\n \
-        - Anti-Task: Cancellation\nPlease enter the type of task: ")
-    startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
-    duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
-    date = input("Please enter the date in the form YYYYMMDD: ")
-    return name, tType, float(startTime), float(duration), date;
-
+    taskInfoMenuLoop = True
+    while taskInfoMenuLoop:
+        print(" ______________________________________")
+        print("|                                      |")
+        print("| Select a task type:                  |")
+        print("|    1. Recurring                      |")
+        print("|    2. Transient                      |")
+        print("|    3. Anti-Task                      |")
+        print("|    4. Back                           |")
+        print("|______________________________________|")
+        tType = input(">> ")
+        # tType = input(\
+        # "There are 3 types of tasks:\n \
+        #     - Recurring: Class, Study, Sleep, Exercise, Work, Meal\n \
+        #     - Transient: Visit, Shopping, Appointment\n \
+        #     - Anti-Task: Cancellation\nPlease enter the type of task: ")
+        if tType == "1":    # recurring task
+            name = input("Please enter the name of the task (case sensitive): ")
+            startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
+            duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
+            # Don't think date may be required in the "createRecurringTask" method since we are asking for start and end date
+            date = input("Please enter the date in the form YYYYMMDD: ")
+            startDate = input("Please enter the start date in the form YYYYMMDD: ")
+            endDate = input("Please enter the end date in the form YYYYMMDD: ")
+            frequency = input("Please enter the frequency number: ")
+            return name, tType, float(startTime), float(duration), date, startDate, endDate, frequency
+        elif tType == "2": # transient task
+            name = input("Please enter the name of the task (case sensitive): ")
+            startTime = input("Please enter the start time (a value from 0.25 - 23.75): ")
+            duration = input("Please enter the duration of the task (a value from 0.25 - 23.75): ")
+            date = input("Please enter the date in the form YYYYMMDD: ")
+            return name, tType, float(startTime), float(duration), date
+        elif tType == "3": # anti-task
+            print("DO WOOPness for anti-task")
+        elif tType == "4":
+            taskInfoMenuLoop = False
 
 def main() :
     #driver code here :)
@@ -105,15 +121,16 @@ def main() :
         mainMenu()
         userInput = input(">> ")
         if userInput == "1":
+            args = taskInfoPrompt()
             try:
             #runs if no error, trying to account for bad num inputs, since casting in infoPrompt function
                 args = taskInfoPrompt()
                 if user.createTask(*args): # the '*' means the elements in args will be the arguments of createTask func
                     print("...Task created")
                     subMenuLoop = True
-                else:
-                    print("Bad input, please try again")
-                    continue
+                # else:
+                #     print("Bad input, please try again")
+                #     continue
             except:
                 print("Bad input, please try again")
                 continue
@@ -127,7 +144,7 @@ def main() :
                         userInput = input(">> ")
                         if userInput == "1":    # edit task
                             args = taskInfoPrompt()
-                            user.createTask(*list(args)) # passing the elements of the tuple as a list of args 
+                            user.createRecurringTask(*list(args)) # passing the elements of the tuple as a list of args 
                             print("Task updated")
                         elif userInput == "2":  # add task
                             args = taskInfoPrompt()
