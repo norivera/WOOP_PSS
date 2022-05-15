@@ -121,6 +121,71 @@ def taskInfoPrompt():
         elif tType == "4":
             taskInfoMenuLoop = False
 
+def subMenLoop(user, subMenuLoop):
+    while subMenuLoop:
+        subMenu()
+        userInput = input(">> ")
+        if userInput == "1":    # edit schedule
+            editMenuLoop = True
+            while editMenuLoop:
+                editMenu()
+                userInput = input(">> ")
+                if userInput == "1":    # edit task
+                    args = list(taskInfoPrompt())
+                    user.editTask(*args) # passing the elements of the tuple as a list of args 
+                    print("Task updated")
+                elif userInput == "2":  # add task
+                    args = list(taskInfoPrompt())
+                    args[1] = args[1].lower()
+                    if args[1] in recurringT:# recurring task # the '*' means the elements in args will be the arguments of createTask func
+                        if user.createRecurringTask(*args):
+                            print("...Task created")
+                        else:
+                            print("problem creating task")
+                    elif args[1] in transientT: #transient task
+                        if user.createTransientTask(*args):
+                            print("...Task created")
+                        else:
+                            print("problem creating task")
+                    elif args[1] == "cancellation": #anti task
+                        if user.createAntiTask(*args):
+                            print("...Task created")
+                        else:
+                            print("problem creating task")
+                elif userInput == "3":  # delete task
+                    taskName = input("Please enter the name of the task (case sensitive): ")
+                    user.deleteTask(taskName)
+                    print("Task deleted")
+                elif userInput == "4":  # back
+                    editMenuLoop = False
+        elif userInput == "2":  # view schedule
+            viewMenuLoop = True
+            while viewMenuLoop:
+                viewMenu()
+                userInput = input(">> ")
+                if userInput == "1":
+                    print("Schedule by day:")
+                    date = input("Please enter the date in form YYYYMMDD: ")
+                    user.viewSchedule("day", date)
+                elif userInput == "2":
+                    print("Schedule by week:")
+                    date = input("Please enter the date in form YYYYMMDD: ")
+                    user.viewSchedule("week", date)
+                elif userInput == "3":
+                    print("Schedule by month:")
+                    date = input("Please enter the date in form YYYYMMDD: ")
+                    user.viewSchedule("month", date)
+                elif userInput == "4":
+                    print("Viewing entire Schedule:")
+                    user.viewEntireSchedule()
+                elif userInput == "5":
+                    viewMenuLoop = False
+        elif userInput == "3":  # export schedule
+            user.writeScheduleToFile()
+            print("Schedule exported to '/data/schedule.txt'")
+        elif userInput == "4":
+            subMenuLoop = False
+
 def main() :
     global recurringT, transientT
 
@@ -164,83 +229,18 @@ def main() :
                 print(repr(e)) #should take care of errors that a thrown when casting bad strings from taskInfoPrompt method
                 print("Bad input, please try again")
                 continue
-            while subMenuLoop:
-                subMenu()
-                userInput = input(">> ")
-                if userInput == "1":    # edit schedule
-                    editMenuLoop = True
-                    while editMenuLoop:
-                        editMenu()
-                        userInput = input(">> ")
-                        if userInput == "1":    # edit task
-                            args = list(taskInfoPrompt())
-                            user.editTask(*args) # passing the elements of the tuple as a list of args 
-                            print("Task updated")
-                        elif userInput == "2":  # add task
-                            args = list(taskInfoPrompt())
-                            args[1] = args[1].lower()
-                            if args[1] in recurringT:# recurring task # the '*' means the elements in args will be the arguments of createTask func
-                                if user.createRecurringTask(*args):
-                                    print("...Task created")
-                                else:
-                                    print("problem creating task")
-                            elif args[1] in transientT: #transient task
-                                if user.createTransientTask(*args):
-                                    print("...Task created")
-                                else:
-                                    print("problem creating task")
-                            elif args[1] == "cancellation": #anti task
-                                if user.createAntiTask(*args):
-                                    print("...Task created")
-                                else:
-                                    print("problem creating task")
-                        elif userInput == "3":  # delete task
-                            taskName = input("Please enter the name of the task (case sensitive): ")
-                            user.deleteTask(taskName)
-                            print("Task deleted")
-                        elif userInput == "4":  # back
-                            editMenuLoop = False
-                elif userInput == "2":  # view schedule
-                    viewMenuLoop = True
-                    while viewMenuLoop:
-                        viewMenu()
-                        userInput = input(">> ")
-                        if userInput == "1":
-                            print("Schedule by day:")
-                            date = input("Please enter the date in form YYYYMMDD: ")
-                            user.viewSchedule("day", date)
-                        elif userInput == "2":
-                            print("Schedule by week:")
-                            date = input("Please enter the date in form YYYYMMDD: ")
-                            user.viewSchedule("week", date)
-                        elif userInput == "3":
-                            print("Schedule by month:")
-                            date = input("Please enter the date in form YYYYMMDD: ")
-                            user.viewSchedule("month", date)
-                        elif userInput == "4":
-                            print("Viewing entire Schedule:")
-                            user.viewEntireSchedule()
-                        elif userInput == "5":
-                            viewMenuLoop = False
-                elif userInput == "3":  # export schedule
-                    user.writeScheduleToFile()
-                    print("Schedule exported to '/data/schedule.txt'")
-                elif userInput == "4":
-                    subMenuLoop = False
+            subMenLoop(user, subMenuLoop)
         elif userInput == "2":  # import schedule
             filename = input("Please enter the complete filepath to file: ")
             user.readScheduleFromFile(filename)
             print("File imported!")
+            subMenuLoop = True
+            subMenLoop(user, subMenuLoop)
         elif userInput == "3":
             sys.exit("Thank you for using the PSS. WOOP WOOP :)")
         else:
             print("Invalid option, please try again :)")
 
-    # user.createTask("1", "Class",    10.25,          0.25,      20220506)
-    # user.createTask("2", "Class",    8.25,          0.25,      20220510)
-    # user.createTask("3", "Class",    9.25,          0.25,      20220601)
-    # user.viewSchedule("month",20220506) 
-    # user.writeScheduleToFile()
-
+ 
 if __name__ == '__main__':
     main()
