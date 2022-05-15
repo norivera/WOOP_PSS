@@ -10,10 +10,14 @@ from datetime import datetime, timedelta, time
 
 taskList = []
 recurringDates=[]
+recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
+antiT = ["cancellation"]
+transientT = ["visit", "shopping", "appointment"]
+
 class schedule:
 
     def __init__(self):
-        global taskList, recurringDates
+        global taskList, recurringDates, recurringT
         pass 
 
     def createRecurringTask(self, name, type, sTime, duration, sDate, eDate, frequency):
@@ -22,7 +26,7 @@ class schedule:
         if  not self.checkInputs(name, type, sTime, duration, 20220516):
             return False
 
-        recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
+
         if type.lower() not in recurringT:
             print("Not a valid task type")
             return False
@@ -46,17 +50,18 @@ class schedule:
         
         day = start
         while day<= end:
-            recurringDates.append((day,sTime,duration))
-            day = start+ timedelta(days=frequency)
+            recurringDates.append((day.strftime("%Y%m%d"),sTime,duration))
+            day += timedelta(days=frequency)
 
         return True    
 
     def createAntiTask(self, name, type, sTime, duration, date):
-        global taskList, recurringDates
+        global taskList, recurringDates, antiT
 
         if not self.checkInputs(name, type, sTime, duration, date):
             return False
-        antiT = ["cancellation"]
+
+
         if type.lower() not in antiT:
             print("Not a valid task type")
             return False
@@ -76,11 +81,12 @@ class schedule:
         return True
 
     def createTransientTask(self, name, type, sTime, duration, date):
-        global taskList, recurringDates
+        global taskList, recurringDates, transientT
 
         if not self.checkInputs(name, type, sTime, duration, date):
             return False
-        transientT = ["visit", "shopping", "appointment"]
+
+
         if type.lower() not in transientT:
             print("Not a valid task type")
             return False
@@ -129,11 +135,36 @@ class schedule:
         global taskList
         taskList = list( filter(lambda x: x.name != name, taskList)) 
 
-    def editTask(self, name, type, sTime, duration, date):
-        global taskList
+    def editTask(self, name, type, sTime, duration, date=0,sDate=0,eDate=0,freq=0):
+        global taskList, recurringDates, recurringT, transientT, antiT
         taskList = list( filter(lambda x: x.name != name, taskList))
-        self.createTask(name,type,sTime,duration,date)
+        for i in taskList:
+            if i.name==name:
+                s=i.date
+                e=i.endDate
+                f=i.frequency
+                break
+        
+        if type.lower in recurringT:
 
+            start =datetime.strptime(str(sDate), "%Y%m%d")
+            end=datetime.strptime(str(eDate), "%Y%m%d")
+            day = start
+            while day<= end:
+                recurringDates.remove((day.strftime("%Y%m%d"),sTime,duration))
+                day += timedelta(days=freq)
+
+            task= self.createRecurringTask(name, type, sTime, duration,sDate,eDate,freq)
+            
+  
+        elif type.lower() in transientT:
+            task = self.createTransientTask(name,type, sTime, duration, date)
+        else:
+            task = self.createAntiTask(name,type, sTime, duration, date)
+
+        
+        taskList.append(task)
+ 
     def writeScheduleToFile(self):
         taskList.sort(key=lambda x: (x.date,x.startTime))
 
@@ -143,15 +174,23 @@ class schedule:
             
 
     def readScheduleFromFile(self,filename):
+        global taskList, recurringDates, recurringT, transientT, antiT
+        
         with open(filename) as file:
             data=json.load(file)
 
         print(data)
         file.close()
         taskList=[]
+        recurringDates=[]
 
         for x in data: 
-            self.createTask(x["name"],x["type"], x["startTime"],x["duration"],x["date"])
+            if x.typelower() in recurringT:
+                self.createTask(x["name"],x["type"], x["startTime"],x["duration"],x["startDate"],x["endDate"],x["frequency"])
+            elif x.typelower() in transientT:
+                self.createTask(x["name"],x["type"], x["startTime"],x["duration"],x["date"])
+            else:
+                self.createTask(x["name"],x["type"], x["startTime"],x["duration"],x["date"])
 
 
     def viewSchedule(self, period, startDate):

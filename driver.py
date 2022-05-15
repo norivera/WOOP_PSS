@@ -1,4 +1,5 @@
 #from module  import  class
+from ast import arg
 from asyncio.windows_events import NULL
 from schedule import schedule
 import os
@@ -10,7 +11,6 @@ import sys
 
 recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
 transientT = ["visit", "shopping", "appointment"]
-
 
 def mainMenu():
     '''
@@ -123,13 +123,14 @@ def taskInfoPrompt():
 
 def main() :
     global recurringT, transientT
-    
+
     #driver code here :) ^_^ :D '.' :3 :o :E 
     '''
     creating requires:
         - self, name, type, startTime, duration, 
     '''
     user = schedule()
+    subMenuLoop = False
     while True:
         mainMenu()
         userInput = input(">> ")
@@ -159,7 +160,7 @@ def main() :
                 else:
                     print("Bad input, please try again againgain")
                     continue
-            except Exception as e: 
+            except Exception as e:
                 print(repr(e)) #should take care of errors that a thrown when casting bad strings from taskInfoPrompt method
                 print("Bad input, please try again")
                 continue
@@ -172,13 +173,27 @@ def main() :
                         editMenu()
                         userInput = input(">> ")
                         if userInput == "1":    # edit task
-                            args = taskInfoPrompt()
-                            user.createRecurringTask(*list(args)) # passing the elements of the tuple as a list of args 
+                            args = list(taskInfoPrompt())
+                            user.editTask(*args) # passing the elements of the tuple as a list of args 
                             print("Task updated")
                         elif userInput == "2":  # add task
-                            args = taskInfoPrompt()
-                            user.createTask(*args)
-                            print("...Task created")
+                            args = list(taskInfoPrompt())
+                            args[1] = args[1].lower()
+                            if args[1] in recurringT:# recurring task # the '*' means the elements in args will be the arguments of createTask func
+                                if user.createRecurringTask(*args):
+                                    print("...Task created")
+                                else:
+                                    print("problem creating task")
+                            elif args[1] in transientT: #transient task
+                                if user.createTransientTask(*args):
+                                    print("...Task created")
+                                else:
+                                    print("problem creating task")
+                            elif args[1] == "cancellation": #anti task
+                                if user.createAntiTask(*args):
+                                    print("...Task created")
+                                else:
+                                    print("problem creating task")
                         elif userInput == "3":  # delete task
                             taskName = input("Please enter the name of the task (case sensitive): ")
                             user.deleteTask(taskName)
@@ -220,7 +235,6 @@ def main() :
             sys.exit("Thank you for using the PSS. WOOP WOOP :)")
         else:
             print("Invalid option, please try again :)")
-
 
     # user.createTask("1", "Class",    10.25,          0.25,      20220506)
     # user.createTask("2", "Class",    8.25,          0.25,      20220510)
