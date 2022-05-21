@@ -198,6 +198,7 @@ class schedule:
         return True
 
     
+    # Method to check if name, start time, duration, and date are in the right format when creating tasks
     def checkInputs(self, name, type, sTime, duration, date):
         '''
             Checking the task data inputs, ensuring that the name is unique,
@@ -295,8 +296,8 @@ class schedule:
                 day += timedelta(days=f)
 
             
-        # Re-create the task based on the type
-    # Method writes schedule to Json file       if t.lower() in recurringT:    
+        # Re-create the task based on the type     
+        if t.lower() in recurringT:    
             self.createRecurringTask(name, type, sTime, duration,sDate,eDate,freq)
         elif t.lower() in transientT:
             self.createTransientTask(name,type, sTime, duration, date)
@@ -306,10 +307,7 @@ class schedule:
 
     # Dumps the contents of taskList into a file in json format sorted by date and then time
     def writeScheduleToFile(self):
-    # Method reads schedule from Json file        global taskList
-
         taskList.sort(key=lambda x: (x.date,x.startTime))
-
         with open("./data/schedule.json", "w") as file:
             json.dump([ob.__dict__ for ob in taskList], file)
         file.close()
@@ -323,7 +321,7 @@ class schedule:
             data=json.load(file)
             
         file.close()
-        # creprints schedule for a specific time period: day, week, or monthating task objects based on the type, to make the appriopriate function calls
+        # reprints schedule for a specific time period: day, week, or monthating task objects based on the type, to make the appriopriate function calls
         for x in data: 
             if x["Type"].lower() in recurringT:
                 self.createRecurringTask(x["Name"],x["Type"], float(x["StartTime"]),float(x["Duration"]),int(x["StartDate"]),int(x["EndDate"]),int(x["Frequency"]))
@@ -333,6 +331,7 @@ class schedule:
                 self.createAntiTask(x["Name"],x["Type"], float(x["StartTime"]),float(x["Duration"]),int(x["Date"]))
 
 
+    # View part or schedule for a specific time frame
     def viewSchedule(self, period, startDate):
         '''
         printing the schedule for a specified day, week, or month
@@ -357,7 +356,6 @@ class schedule:
     # Prints out all the tasks in the scheudle
     def viewEntireSchedule(self):
         global taskList, recurringDates
-
 
        # Sort by date and then time and print out all tasks
         taskList.sort(key=lambda x: (x.date,x.startTime))
