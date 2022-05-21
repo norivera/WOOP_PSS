@@ -1,17 +1,19 @@
-#from module  import  class
 from ast import arg
 from asyncio.windows_events import NULL
-from schedule import schedule
-import os
+#from module  import  class
+from schedule import schedule 
 import sys
-# run in command prompt: pip install console-menu
-# sample code for the menu: https://pypi.org/project/console-menu/ 
-# import recurringTask
-# import transientTask
 
+# David Johannsen
+# CS 3560.03
+# Cyrena Burke, Irfan Iqbal, Noe Rivera dawg, Dany Flores, Alexa Tang
+# May 20, 2022
+
+#Lists with specific task names to determine which type of task
 recurringT = ["class", "study", "sleep", "exercise", "work", "meal"]
 transientT = ["visit", "shopping", "appointment"]
 
+#### COMMAND LINE UI #######
 def mainMenu():
     '''
     welcome, import or create from scratch 
@@ -76,6 +78,10 @@ def writeMenu():
     print("|______________________________________|")
 
 def taskInfoPrompt():
+    '''
+        This method collects the data necessary for the creation
+        of each task type
+    '''
     taskInfoMenuLoop = True
     while taskInfoMenuLoop:
         print(" ______________________________________")
@@ -87,11 +93,6 @@ def taskInfoPrompt():
         print("|    4. Back                           |")
         print("|______________________________________|")
         tType = input(">> ")
-        # tType = input(\
-        # "There are 3 types of tasks:\n \
-        #     - Recurring: Class, Study, Sleep, Exercise, Work, Meal\n \
-        #     - Transient: Visit, Shopping, Appointment\n \
-        #     - Anti-Task: Cancellation\nPlease enter the type of task: ")
         if tType == "1":    # recurring task
             name = input("Please enter the name of the task (case sensitive): ")
             tType = input("Select a recurring task type:\n Class, Study, Sleep, Exercise, Work, Meal\n")
@@ -122,10 +123,14 @@ def taskInfoPrompt():
             taskInfoMenuLoop = False
 
 def subMenLoop(user, subMenuLoop):
+    '''
+        This is the menu logic to get from the SubMenu to the menus
+        of its respective options
+    '''
     while subMenuLoop:
         subMenu()
         userInput = input(">> ")
-        if userInput == "1":    # edit schedule
+        if userInput == "1":  # edit schedule
             editMenuLoop = True
             while editMenuLoop:
                 editMenu()
@@ -137,6 +142,7 @@ def subMenLoop(user, subMenuLoop):
                 elif userInput == "2":  # add task
                     args = list(taskInfoPrompt())
                     args[1] = args[1].lower()
+                    #figuring out the task type:
                     if args[1] in recurringT:# recurring task # the '*' means the elements in args will be the arguments of createTask func
                         if user.createRecurringTask(*args):
                             print("...Task created")
@@ -152,11 +158,14 @@ def subMenLoop(user, subMenuLoop):
                             print("...Task created")
                         else:
                             print("problem creating task")
+                    else:
+                        print("Bad type input, please try again")
+                        continue
                 elif userInput == "3":  # delete task
                     taskName = input("Please enter the name of the task (case sensitive): ")
                     user.deleteTask(taskName)
                     print("Task deleted")
-                elif userInput == "4":  # back
+                elif userInput == "4":  # back to previous menu, submenu
                     editMenuLoop = False
         elif userInput == "2":  # view schedule
             viewMenuLoop = True
@@ -182,28 +191,23 @@ def subMenLoop(user, subMenuLoop):
                     viewMenuLoop = False
         elif userInput == "3":  # export schedule
             user.writeScheduleToFile()
-            print("Schedule exported to '/data/schedule.txt'")
+            print("Schedule exported to '/data/schedule.json'")
         elif userInput == "4":
             subMenuLoop = False
 
 def main() :
     global recurringT, transientT
-
-    #driver code here :) ^_^ :D '.' :3 :o :E 
-    '''
-    creating requires:
-        - self, name, type, startTime, duration, 
-    '''
-    user = schedule()
+    user = schedule() #one user obeject per execution of the program
     subMenuLoop = False
     while True:
         ########## START MAIN MENU ##########
         mainMenu()
         userInput = input(">> ")
-        if userInput == "1":
+        if userInput == "1": #creating a new schedule from scratch
             args = list(taskInfoPrompt())
             try:
             #runs if no error, trying to account for bad num inputs, since casting in infoPrompt function
+                # finding the task type:
                 args[1] = args[1].lower()
                 if args[1] in recurringT:# recurring task # the '*' means the elements in args will be the arguments of createTask func
                     if user.createRecurringTask(*args):
@@ -224,20 +228,22 @@ def main() :
                     else:
                         print("problem creating task")
                 else:
-                    print("Bad input, please try again againgain")
+                    print("Bad type input, please try again")
                     continue
             except Exception as e:
                 print(repr(e)) #should take care of errors that a thrown when casting bad strings from taskInfoPrompt method
                 print("Bad input, please try again")
                 continue
+            ###### SUB MENU FUNCTION CALL ####
             subMenLoop(user, subMenuLoop)
+            #################################
         elif userInput == "2":  # import schedule
             filename = input("Please enter the complete filepath to file: ")
             user.readScheduleFromFile(filename)
             print("File imported!")
             subMenuLoop = True
             subMenLoop(user, subMenuLoop)
-        elif userInput == "3":
+        elif userInput == "3": #exit program
             sys.exit("Thank you for using the PSS. WOOP WOOP :)")
         else:
             print("Invalid option, please try again :)")
